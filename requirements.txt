@@ -1,2 +1,9 @@
+PyGithub
+python-dotenv
+pandas
+pyarrow
 boto3
-dotenv
+pqdm
+optuna
+xgboost
+scikit-learn

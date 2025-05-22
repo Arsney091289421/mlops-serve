@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  serve:
+    build: .
+    image: mlops-serve:latest
+    container_name: mlops-serve
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    

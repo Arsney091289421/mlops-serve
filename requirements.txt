@@ -7,3 +7,6 @@ pqdm
 optuna
 xgboost
 scikit-learn
+fastapi
+uvicorn[standard]
+setuptools

@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from typing import List
 from dotenv import load_dotenv
 from datetime import datetime
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.predict_utils import (
     fetch_open_issues_by_recent,
@@ -53,3 +54,6 @@ def export_predictions_by_ids(ids: List[int] = Body(..., embed=True)):
     out_path = os.path.join(CSV_OUTPUT_DIR, f"open_issues_pred_by_ids_{timestamp}.csv")
     df.to_csv(out_path, index=False)
     return FileResponse(out_path, media_type="text/csv", filename=os.path.basename(out_path))
+
+# ==== Prometheus metrics ====
+Instrumentator().instrument(app).expose(app)

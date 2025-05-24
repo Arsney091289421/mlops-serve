@@ -3,3 +3,5 @@
 predict_outputs/
 *.egg-info/
 **/__pycache__/
+connect_ec2.sh
+print_service_urls.sh

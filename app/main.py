@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.predict_utils import (
+from app.utils import (
     fetch_open_issues_by_recent,
     fetch_open_issues_by_ids,
     predict_issues

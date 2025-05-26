@@ -3,20 +3,20 @@ import argparse
 from datetime import datetime
 from dotenv import load_dotenv
 
-from app.predict_utils import (
+from app.utils import (
     fetch_open_issues_by_recent,
     fetch_open_issues_by_ids,
     predict_issues
 )
 
-# ========== Environment & Config ==========
+# Environment & Config 
 load_dotenv()
 MODEL_DIR = os.getenv("MODEL_DIR", "./model")
 MODEL_PATH = os.path.join(MODEL_DIR, "latest_model.json")
 PREDICT_OUT_DIR = os.getenv("PREDICT_OUT_DIR", "./predict_outputs")
 os.makedirs(PREDICT_OUT_DIR, exist_ok=True)
 
-# ========== Main Process ==========
+# Main Process 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["recent", "ids"], required=True, help="Prediction mode")

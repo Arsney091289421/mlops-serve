@@ -1,7 +1,25 @@
 .env
 .venv
 predict_outputs/
-*.egg-info/
-**/__pycache__/
 connect_ec2.sh
 print_service_urls.sh
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# pytest
+.pytest_cache/
+
+# VSCode
+.vscode/
+
+# venv and env files
+.venv/
+.env
+
+# Build
+*.egg-info/
+dist/
+build/

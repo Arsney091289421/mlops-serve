@@ -1,12 +1,13 @@
 import os
 import pandas as pd
 import numpy as np
+import boto3
 from github import Github
 import xgboost as xgb
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 
-# ===== Load environment variables (if not loaded in main) =====
+# Load environment variables 
 load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 REPO_NAME = os.getenv("REPO_NAME", "huggingface/transformers")
@@ -81,3 +82,15 @@ def predict_issues(issues, model_path):
     proba = predict_proba(model_path, df)
     df["prob_closed_within_7_days"] = np.round(proba, 4)
     return df[["number", "title", "created_at", "prob_closed_within_7_days"]]
+
+
+def download_model_from_s3(bucket_name, s3_key, model_dir, local_model_name="latest_model.json"):
+    """
+    Download model file from S3 to the specified local directory
+    """
+    os.makedirs(model_dir, exist_ok=True)
+    local_path = os.path.join(model_dir, local_model_name)
+    s3 = boto3.client("s3")
+    s3.download_file(bucket_name, s3_key, local_path)
+    print(f"[DONE] Downloaded s3://{bucket_name}/{s3_key} → {local_path}")
+    return local_path

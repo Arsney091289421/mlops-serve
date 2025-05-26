@@ -9,6 +9,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from app.utils import (
     fetch_open_issues_by_recent,
     fetch_open_issues_by_ids,
+    download_model_from_s3,
     predict_issues
 )
 
@@ -17,7 +18,10 @@ load_dotenv()
 MODEL_DIR = os.getenv("MODEL_DIR", "./model")
 MODEL_PATH = os.path.join(MODEL_DIR, "latest_model.json")
 CSV_OUTPUT_DIR = os.getenv("CSV_OUTPUT_DIR", "./predict_outputs")
+MODEL_BUCKET = os.getenv("MODEL_BUCKET")   # .env
+MODEL_S3_KEY = os.getenv("MODEL_S3_KEY", "model/latest_model.json")
 os.makedirs(CSV_OUTPUT_DIR, exist_ok=True)
+download_model_from_s3(MODEL_BUCKET, MODEL_S3_KEY, MODEL_DIR) # Make sure using the laetst model
 
 app = FastAPI()
 

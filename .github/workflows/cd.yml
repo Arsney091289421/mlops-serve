@@ -30,6 +30,6 @@ jobs:
             --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
             --comment "CI/CD Deployment" \
-            --parameters commands='cd /home/ec2-user/mlops-serve; git pull; docker compose down; docker compose up --build -d' \
+            --parameters 'commands=["sudo -i -u ec2-user bash -c \"cd /home/ec2-user/mlops-serve && git pull && docker compose down && docker compose up --build -d\""]' \
             --timeout-seconds 600 \
             --output text

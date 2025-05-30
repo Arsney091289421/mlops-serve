@@ -5,7 +5,7 @@ pyarrow
 boto3
 pqdm
 optuna
-xgboost
+xgboost==1.7.6
 scikit-learn
 fastapi
 uvicorn[standard]

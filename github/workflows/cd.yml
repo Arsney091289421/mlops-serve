@@ -9,6 +9,8 @@ on:
       - 'dockerfile'
       - 'requirements.txt'
       - 'docker-compose.yml'
+      - 'scripts/**'
+      - 'workflow.py'
 
 jobs:
   deploy:

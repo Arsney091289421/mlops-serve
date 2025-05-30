@@ -23,6 +23,12 @@ services:
       - '--storage.tsdb.retention.time=12h'
     mem_limit: 300m
 
+  pushgateway:
+    image: prom/pushgateway
+    container_name: pushgateway
+    restart: unless-stopped
+    ports:
+      - "9091:9091"
 
   grafana:
     image: grafana/grafana

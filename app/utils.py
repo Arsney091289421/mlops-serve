@@ -94,3 +94,11 @@ def download_model_from_s3(bucket_name, s3_key, model_dir, local_model_name="lat
     s3.download_file(bucket_name, s3_key, local_path)
     print(f"[DONE] Downloaded s3://{bucket_name}/{s3_key} → {local_path}")
     return local_path
+
+def upload_file_to_s3(local_path, bucket_name, s3_key):
+    """
+    Upload a local file to S3 with the given bucket and key.
+    """
+    s3 = boto3.client("s3")
+    s3.upload_file(local_path, bucket_name, s3_key)
+    print(f"[DONE] Uploaded {local_path} -> s3://{bucket_name}/{s3_key}")

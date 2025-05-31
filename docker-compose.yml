@@ -18,6 +18,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-data:/prometheus  
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=12h'
@@ -39,8 +40,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin   # Default passcode
     volumes:
-      - grafana-data:/var/lib/grafana     # Persist data
+      - ./grafana-data:/var/lib/grafana      # Persist data
     mem_limit: 300m
 
-volumes:
-  grafana-data: {}
+

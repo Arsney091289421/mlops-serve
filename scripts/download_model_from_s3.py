@@ -16,3 +16,4 @@ if __name__ == "__main__":
         s3_key=MODEL_S3_KEY,
         model_dir=MODEL_DIR
     )
+

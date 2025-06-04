@@ -21,7 +21,7 @@ services:
       - ./prometheus-data:/prometheus  
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.retention.time=12h'
+      - '--storage.tsdb.retention.time=30d'
     mem_limit: 300m
 
   pushgateway:

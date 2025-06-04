@@ -26,12 +26,15 @@ def main():
     args = parser.parse_args()
 
     # 1. Fetch issues according to mode
-    if args.mode == "recent":
-        issues = fetch_open_issues_by_recent(args.days)
-        print(f"[INFO] Fetched {len(issues)} open issues from last {args.days} days.")
-    else:
+    if args.mode == "ids":
+        if not args.ids:
+            print("[ERROR] --ids argument is required when mode is 'ids'!")
+            exit(1)
         issues = fetch_open_issues_by_ids(args.ids)
         print(f"[INFO] Fetched {len(issues)} open issues by IDs.")
+    else:
+        issues = fetch_open_issues_by_recent(args.days)
+        print(f"[INFO] Fetched {len(issues)} open issues from last {args.days} days.")
 
     if not issues:
         print("[WARN] No open issues found. Exit.")

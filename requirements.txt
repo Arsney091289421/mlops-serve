@@ -13,3 +13,4 @@ setuptools
 prometheus-fastapi-instrumentator
 pytest
 moto[s3]==4.2.13              
+requests

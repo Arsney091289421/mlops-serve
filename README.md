@@ -30,3 +30,23 @@ All core features (model download, prediction, API serving, CSV export) are avai
 ## System Architecture
 
 ![System Architecture](docs/architecture.svg)
+
+## Quick Start
+
+### Prerequisites
+
+- **AWS account**
+  - An S3 bucket for storing models and prediction results
+  - An EC2 instance (Amazon Linux, Python 3.9+ recommended)
+    - EC2 instance must have [AWS SSM Agent](https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent.html) running
+    - EC2 instance must be attached to an IAM role with at least:
+      - `AmazonS3FullAccess` (for S3 access without explicit credentials)
+      - `AmazonSSMManagedInstanceCore` (for SSM remote management)
+- **Docker & docker-compose** installed on the EC2 instance
+- **Required environment variables** configured (`.env`, see `.env.example`)
+  - You do **not** need to specify `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in `.env` when running on EC2 with the correct IAM role
+- **GitHub Actions CD**
+  - A dedicated IAM user with `AmazonSSMFullAccess` to enable remote deployment via SSM in your GitHub Actions workflow
+  - Store the following as GitHub repository secrets:
+    - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `EC2_INSTANCE_ID`
+

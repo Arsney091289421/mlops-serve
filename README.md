@@ -1,4 +1,4 @@
-## Project Overview
+## 1. Project Overview
 
 This repository provides a batch inference and prediction service for GitHub open issues, optimized for daily automated runs on AWS EC2, but also runnable locally.
 
@@ -8,7 +8,7 @@ This repository provides a batch inference and prediction service for GitHub ope
 
 All core features (model download, prediction, API serving, CSV export) are available both in the cloud and locally, as long as environment variables and AWS credentials are configured.
 
-## Features
+## 2. Features
 
 - Automated daily batch inference and prediction for GitHub open issues
 - Scheduled workflow via local cron job (or Prefect)
@@ -18,7 +18,7 @@ All core features (model download, prediction, API serving, CSV export) are avai
 - Easy deployment with Docker and docker-compose
 - Integrated CI/CD pipeline for EC2 auto-deployment
 
-## Tech Stack
+## 3. Tech Stack
 
 - Python 3.9
 - FastAPI
@@ -27,13 +27,13 @@ All core features (model download, prediction, API serving, CSV export) are avai
 - AWS S3 / EC2 / SSM / IAM
 - Prometheus, Pushgateway, Grafana
 
-## System Architecture
+## 4. System Architecture
 
 ![System Architecture](docs/architecture.svg)
 
-## Quick Start
+## 5. Quick Start
 
-### Prerequisites
+### 5.1 Prerequisites
 
 - **AWS account**
   - An S3 bucket for storing models and prediction results
@@ -56,7 +56,7 @@ All core features (model download, prediction, API serving, CSV export) are avai
 > - You do **not** need to specify `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` when running on EC2 with the correct IAM role attached.
 > - The `MODEL_BUCKET` environment variable is still required, even when using IAM roles, to specify the target S3 bucket name.
 
-### 4.2 Deployment
+### 5.2 Deployment
 
 1. **Clone the repository**
 

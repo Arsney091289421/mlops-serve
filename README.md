@@ -80,6 +80,7 @@ All core features (model download, prediction, API serving, CSV export) are avai
 
 4. **Check that services are running**
 
-   - FastAPI docs: ‘http://YOUR_EC2_IP:8000/docs’
-   - Prometheus: ‘http://YOUR_EC2_IP:9090/’
-   - Grafana: ‘http://YOUR_EC2_IP:3000/’ (default password: `admin`)
+- FastAPI docs: `http://YOUR_EC2_IP:8000/docs`
+- Prometheus: `http://YOUR_EC2_IP:9090/`
+- Grafana: `http://YOUR_EC2_IP:3000/` (default password: `admin`)
+

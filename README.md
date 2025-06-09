@@ -84,3 +84,56 @@ All core features (model download, prediction, API serving, CSV export) are avai
 - Prometheus: `http://YOUR_EC2_IP:9090/`
 - Grafana: `http://YOUR_EC2_IP:3000/` (default password: `admin`)
 
+## 6. Workflow & Automation
+
+The full workflow is handled by `workflow.py` (downloads latest model → runs inference on open issues → uploads results to S3).
+
+**Recommended:** Use cron on your EC2 instance to schedule daily automatic runs.
+
+### 6.1 Example: Setting up a daily cron job
+
+1. SSH into your EC2 instance:
+
+   ```bash
+   ssh ec2-user@YOUR_EC2_PUBLIC_IP
+   ```
+
+2. Edit your crontab:
+
+   ```bash
+   crontab -e
+   ```
+
+3. Add the following line to run `workflow.py` every day at 5:00 AM UTC:
+
+   ```cron
+   0 5 * * * cd /home/ec2-user/mlops-serve && /usr/bin/python3 workflow.py >> /home/ec2-user/mlops-serve/workflow_cron.log 2>&1
+   ```
+   
+   - Logs will be saved to `workflow_cron.log` in the project directory
+
+4. Check your current cron jobs:
+
+   ```bash
+   crontab -l
+   ```
+
+### 6.2 Prometheus Metrics
+
+Each workflow run pushes metrics to Prometheus Pushgateway for monitoring.  
+Metrics sent:
+
+```python
+metric = f'workflow_status{{job="{job_name}"}} {status}\n'
+metric += f'workflow_last_run{{job="{job_name}"}} {int(datetime.now().timestamp())}\n'
+```
+
+- `workflow_status{job="predict_upload"}`: 1 (success) or 0 (fail)
+- `workflow_last_run{job="predict_upload"}`: UNIX timestamp of last run
+
+### 6.3 Why cron?
+
+- Cron is lightweight and reliable—ideal for always-on EC2 servers and simple batch jobs.
+- If you need more advanced orchestration, `workflow.py` can be directly scheduled or integrated with Prefect, Airflow, or any other workflow scheduler.
+
+

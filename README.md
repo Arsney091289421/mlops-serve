@@ -266,7 +266,7 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 > - The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
 > - You can add more tests under `tests/` as needed.
 
-### 10. FAQ
+## 10. FAQ
 
 **Q: My workflow.py did not run as scheduled. What should I check?**  
 A:  
@@ -284,7 +284,7 @@ A:
 - Go to the [AWS SSM Console](https://console.aws.amazon.com/systems-manager/run-command/) and check the "Run Command" history for your EC2 instance.
 - Use AWS Fleet Manager to inspect your instance, review command execution logs, and verify status.
 
-### 11. Maintainers & Contact
+## 11. Maintainers & Contact
 
 - Maintainer: [Arsney091289421](https://github.com/Arsney091289421)
 - Email: leearseny3@gmail.com

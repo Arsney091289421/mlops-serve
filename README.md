@@ -229,5 +229,32 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 > - Ensure the host user running Docker has read/write permissions on these directories.
 > - API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
 
+### 9. Testing
+
+- All basic and smoke tests are located in the `tests/` directory.
+  - Tests cover import checks, S3 mock upload/download, feature extraction with mocked issues, and model prediction logic.
+- Most tests use `pytest` and `moto` to mock S3 operations, ensuring no real AWS charges or side effects.
+
+#### 9.1 How to run tests
+
+1. **Install test dependencies (if not already installed):**
+   ```bash
+   pip install -r requirements-dev.txt
+   # Or, at minimum:
+   pip install pytest moto
+   ```
+
+2. **Run all tests:**
+   ```bash
+   pytest tests/
+   ```
+
+3. **Expected:**
+   - All tests should pass (green).
+   - No actual S3/AWS resources are created or billed.
+
+> Note:
+> - The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
+> - You can add more tests under `tests/` as needed.
 
 

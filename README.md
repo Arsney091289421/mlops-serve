@@ -80,9 +80,9 @@ All core features (model download, prediction, API serving, CSV export) are avai
 
 4. **Check that services are running**
 
-- FastAPI docs: `http://YOUR_EC2_IP:8000/docs`
-- Prometheus: `http://YOUR_EC2_IP:9090/`
-- Grafana: `http://YOUR_EC2_IP:3000/` (default password: `admin`)
+- FastAPI docs: `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs`
+- Prometheus: `http://YOUR_EC2_IP_OR_LOCALHOST:9090/`
+- Grafana: `http://YOUR_EC2_IP_OR_LOCALHOST:3000/` (default password: `admin`)
 
 ## 6. Workflow & Automation
 
@@ -135,5 +135,53 @@ metric += f'workflow_last_run{{job="{job_name}"}} {int(datetime.now().timestamp(
 
 - Cron is lightweight and reliable—ideal for always-on EC2 servers and simple batch jobs.
 - If you need more advanced orchestration, `workflow.py` can be directly scheduled or integrated with Prefect, Airflow, or any other workflow scheduler.
+
+## 7. API Usage
+
+### 7.1 Endpoints & Description
+
+By default, the API server runs in the Docker container on **port 8000**.
+
+| Endpoint                      | Method | Description                                 | Parameters                         |
+|-------------------------------|--------|---------------------------------------------|-------------------------------------|
+| `/predict_recent_open_issues` | GET    | Predict open issues in the last N days      | `days` (query, int, default=1)      |
+| `/predict_by_ids`             | POST   | Predict by specific GitHub issue numbers    | `ids` (body, List[int])             |
+| `/export_predictions`         | GET    | Export CSV for open issues in last N days   | `days` (query, int, default=1)      |
+| `/export_predictions_by_ids`  | POST   | Export CSV for specific issue numbers       | `ids` (body, List[int])             |
+
+All responses (except CSV download) are in JSON format.
+
+### 7.2 Example: Export Predictions for Recent 1 Day as CSV
+
+```bash
+curl -O -J "http://localhost:8000/export_predictions?days=1"
+```
+
+> `-O -J` will save the CSV file with the filename provided by the server.
+
+### 7.3 Example: Predict by Issue IDs
+
+```bash
+curl -X POST "http://localhost:8000/predict_by_ids" \
+  -H "Content-Type: application/json" \
+  -d '{"ids": [12345, 12346, 12347]}'
+```
+
+### 7.4 Example: Export Predictions by Issue IDs as CSV
+
+```bash
+curl -X POST "http://localhost:8000/export_predictions_by_ids" \
+  -H "Content-Type: application/json" \
+  -d '{"ids": [12345, 12346, 12347]}' \
+  -OJ
+```
+
+### 7.5 Interactive API Docs (Swagger UI)
+
+You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
+
+- `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs` (Swagger UI)  
+- `http://YOUR_EC2_IP_OR_LOCALHOST:8000/redoc` (ReDoc)
+
 
 

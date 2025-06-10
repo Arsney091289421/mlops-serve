@@ -65,24 +65,33 @@ All core features (model download, prediction, API serving, CSV export) are avai
    cd mlops-serve
    ```
 
-2. **Configure environment variables**
+2. **Install Python dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   pip install -e .
+   ```
+
+ - The `-e .` flag uses `setup.py` for editable installation, enabling clean cross-file imports—no need to add manual sys.path hacks in scripts.
+
+3. **Configure environment variables**
 
    ```bash
    cp .env.example .env
-   # Edit .env to match your S3 bucket and output directory settings
+   # Edit .env to match your S3 bucket, GitHub token, and output directory settings
    ```
 
-3. **Start all services with Docker Compose**
+4. **Start all services with Docker Compose**
 
    ```bash
    docker compose up --build -d
    ```
 
-4. **Check that services are running**
+5. **Check that services are running**
 
-- FastAPI docs: `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs`
-- Prometheus: `http://YOUR_EC2_IP_OR_LOCALHOST:9090/`
-- Grafana: `http://YOUR_EC2_IP_OR_LOCALHOST:3000/` (default password: `admin`)
+   - FastAPI docs: `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs`
+   - Prometheus: `http://YOUR_EC2_IP_OR_LOCALHOST:9090/`
+   - Grafana: `http://YOUR_EC2_IP_OR_LOCALHOST:3000/` (default password: `admin`)
 
 ## 6. Workflow & Automation
 
@@ -92,19 +101,19 @@ The full workflow is handled by `workflow.py` (downloads latest model → runs i
 
 ### 6.1 Example: Setting up a daily cron job
 
-1. SSH into your EC2 instance:
+1. **SSH into your EC2 instance**
 
    ```bash
    ssh ec2-user@YOUR_EC2_PUBLIC_IP
    ```
 
-2. Edit your crontab:
+2. **Edit your crontab**
 
    ```bash
    crontab -e
    ```
 
-3. Add the following line to run `workflow.py` every day at 5:00 AM UTC:
+3. **Add the following line to run `workflow.py` every day at 5:00 AM UTC**
 
    ```cron
    0 5 * * * cd /home/ec2-user/mlops-serve && /usr/bin/python3 workflow.py >> /home/ec2-user/mlops-serve/workflow_cron.log 2>&1
@@ -112,7 +121,7 @@ The full workflow is handled by `workflow.py` (downloads latest model → runs i
    
    - Logs will be saved to `workflow_cron.log` in the project directory
 
-4. Check your current cron jobs:
+4. **Check your current cron jobs**
 
    ```bash
    crontab -l
@@ -151,9 +160,9 @@ By default, the API server runs in the Docker container on **port 8000**.
 
 All responses (except CSV download) are in JSON format.
 
-### 7.2 Export & Predict API Examples
+### 7.2 Example: Export & Predict API 
 
-**1. Export Predictions for Recent 1 Day as CSV**
+1. **Export Predictions for Recent 1 Day as CSV**
 
 ```bash
 curl -O -J "http://localhost:8000/export_predictions?days=1"
@@ -161,7 +170,7 @@ curl -O -J "http://localhost:8000/export_predictions?days=1"
 
 ---
 
-**2. Predict by Issue IDs**
+2. **Predict by Issue IDs**
 
 ```bash
 curl -X POST "http://localhost:8000/predict_by_ids" \
@@ -171,7 +180,7 @@ curl -X POST "http://localhost:8000/predict_by_ids" \
 
 ---
 
-**3. Export Predictions by Issue IDs as CSV**
+3. **Export Predictions by Issue IDs as CSV**
 
 ```bash
 curl -X POST "http://localhost:8000/export_predictions_by_ids" \

@@ -183,5 +183,47 @@ You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
 - `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs` (Swagger UI)  
 - `http://YOUR_EC2_IP_OR_LOCALHOST:8000/redoc` (ReDoc)
 
+## 8. Docker/Compose Configuration
+
+### Services & Ports
+
+| Service      | Description                  | Default Port |
+|--------------|-----------------------------|--------------|
+| serve        | Model inference API (FastAPI)| 8000         |
+| prometheus   | Prometheus metrics           | 9090         |
+| pushgateway  | Prometheus Pushgateway       | 9091         |
+| grafana      | Grafana dashboard            | 3000         |
+
+### Volume Mounts & Data Persistence
+
+| Service    | Local Path                  | Container Path / Notes           | Purpose                          |
+|------------|-----------------------------|----------------------------------|-----------------------------------|
+| serve      | `./model/`                  | `/app/model/`                    | Store/download model files        |
+| serve      | `./predict_outputs/`        | `/app/predict_outputs/`          | Store prediction results (CSV, etc.) |
+| prometheus | `./prometheus-data/`        | `/prometheus`                    | Persist Prometheus data           |
+| prometheus | `./prometheus.yml`          | `/etc/prometheus/prometheus.yml` | Prometheus config                 |
+| grafana    | `./grafana-data/`           | `/var/lib/grafana`               | Persist Grafana dashboards        |
+
+- All prediction results and models are **persisted on the host machine** and accessible outside of Docker.
+- If the output/model directories (`model/`, `predict_outputs/`) do not exist, Docker Compose will automatically create them when starting services.
+- You can manually inspect or back up all data by accessing the corresponding local directories.
+
+### Directory Permissions (Required for Prometheus)
+
+Before starting Docker Compose, set correct permissions for Prometheus data directory to allow container read/write access:
+
+```bash
+sudo chown -R 65534:65534 /home/ec2-user/mlops-serve/prometheus-data
+sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
+```
+
+- This ensures Prometheus can read and write its data files inside the container.
+
+### Notes
+
+- No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
+- Ensure the host user running Docker has read/write permissions on these directories.
+- API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
+
 
 

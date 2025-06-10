@@ -65,24 +65,33 @@ All core features (model download, prediction, API serving, CSV export) are avai
    cd mlops-serve
    ```
 
-2. **Configure environment variables**
+2. **Install Python dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   pip install -e .
+   ```
+
+ - The `-e .` flag uses `setup.py` for editable installation, enabling clean cross-file imports—no need to add manual sys.path hacks in scripts.
+
+3. **Configure environment variables**
 
    ```bash
    cp .env.example .env
-   # Edit .env to match your S3 bucket and output directory settings
+   # Edit .env to match your S3 bucket, GitHub token, and output directory settings
    ```
 
-3. **Start all services with Docker Compose**
+4. **Start all services with Docker Compose**
 
    ```bash
    docker compose up --build -d
    ```
 
-4. **Check that services are running**
+5. **Check that services are running**
 
-- FastAPI docs: `http://YOUR_EC2_IP:8000/docs`
-- Prometheus: `http://YOUR_EC2_IP:9090/`
-- Grafana: `http://YOUR_EC2_IP:3000/` (default password: `admin`)
+   - FastAPI docs: `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs`
+   - Prometheus: `http://YOUR_EC2_IP_OR_LOCALHOST:9090/`
+   - Grafana: `http://YOUR_EC2_IP_OR_LOCALHOST:3000/` (default password: `admin`)
 
 ## 6. Workflow & Automation
 
@@ -92,19 +101,19 @@ The full workflow is handled by `workflow.py` (downloads latest model → runs i
 
 ### 6.1 Example: Setting up a daily cron job
 
-1. SSH into your EC2 instance:
+1. **SSH into your EC2 instance**
 
    ```bash
    ssh ec2-user@YOUR_EC2_PUBLIC_IP
    ```
 
-2. Edit your crontab:
+2. **Edit your crontab**
 
    ```bash
    crontab -e
    ```
 
-3. Add the following line to run `workflow.py` every day at 5:00 AM UTC:
+3. **Add the following line to run `workflow.py` every day at 5:00 AM UTC**
 
    ```cron
    0 5 * * * cd /home/ec2-user/mlops-serve && /usr/bin/python3 workflow.py >> /home/ec2-user/mlops-serve/workflow_cron.log 2>&1
@@ -112,7 +121,7 @@ The full workflow is handled by `workflow.py` (downloads latest model → runs i
    
    - Logs will be saved to `workflow_cron.log` in the project directory
 
-4. Check your current cron jobs:
+4. **Check your current cron jobs**
 
    ```bash
    crontab -l
@@ -135,5 +144,147 @@ metric += f'workflow_last_run{{job="{job_name}"}} {int(datetime.now().timestamp(
 
 - Cron is lightweight and reliable—ideal for always-on EC2 servers and simple batch jobs.
 - If you need more advanced orchestration, `workflow.py` can be directly scheduled or integrated with Prefect, Airflow, or any other workflow scheduler.
+
+## 7. API Usage
+
+### 7.1 Endpoints & Description
+
+By default, the API server runs in the Docker container on **port 8000**.
+
+| Endpoint                      | Method | Description                                 | Parameters                         |
+|-------------------------------|--------|---------------------------------------------|-------------------------------------|
+| `/predict_recent_open_issues` | GET    | Predict open issues in the last N days      | `days` (query, int, default=1)      |
+| `/predict_by_ids`             | POST   | Predict by specific GitHub issue numbers    | `ids` (body, List[int])             |
+| `/export_predictions`         | GET    | Export CSV for open issues in last N days   | `days` (query, int, default=1)      |
+| `/export_predictions_by_ids`  | POST   | Export CSV for specific issue numbers       | `ids` (body, List[int])             |
+
+All responses (except CSV download) are in JSON format.
+
+### 7.2 Example: Export & Predict API 
+
+1. **Export Predictions for Recent 1 Day as CSV**
+
+```bash
+curl -O -J "http://localhost:8000/export_predictions?days=1"
+```
+
+---
+
+2. **Predict by Issue IDs**
+
+```bash
+curl -X POST "http://localhost:8000/predict_by_ids" \
+  -H "Content-Type: application/json" \
+  -d '{"ids": [12345, 12346, 12347]}'
+```
+
+---
+
+3. **Export Predictions by Issue IDs as CSV**
+
+```bash
+curl -X POST "http://localhost:8000/export_predictions_by_ids" \
+  -H "Content-Type: application/json" \
+  -d '{"ids": [12345, 12346, 12347]}' \
+  -OJ
+```
+
+
+### 7.3 Interactive API Docs (Swagger UI)
+
+You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
+
+- `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs` (Swagger UI)  
+- `http://YOUR_EC2_IP_OR_LOCALHOST:8000/redoc` (ReDoc)
+
+## 8. Docker/Compose Configuration
+
+### 8.1 Services & Ports
+
+| Service      | Description                  | Default Port |
+|--------------|-----------------------------|--------------|
+| serve        | Model inference API (FastAPI)| 8000         |
+| prometheus   | Prometheus metrics           | 9090         |
+| pushgateway  | Prometheus Pushgateway       | 9091         |
+| grafana      | Grafana dashboard            | 3000         |
+
+### 8.2 Volume Mounts & Data Persistence
+
+| Service    | Local Path                  | Container Path / Notes           | Purpose                          |
+|------------|-----------------------------|----------------------------------|-----------------------------------|
+| serve      | `./model/`                  | `/app/model/`                    | Store/download model files        |
+| serve      | `./predict_outputs/`        | `/app/predict_outputs/`          | Store prediction results (CSV, etc.) |
+| prometheus | `./prometheus-data/`        | `/prometheus`                    | Persist Prometheus data           |
+| prometheus | `./prometheus.yml`          | `/etc/prometheus/prometheus.yml` | Prometheus config                 |
+| grafana    | `./grafana-data/`           | `/var/lib/grafana`               | Persist Grafana dashboards        |
+
+- All prediction results and models are **persisted on the host machine** and accessible outside of Docker.
+- If the output/model directories (`model/`, `predict_outputs/`) do not exist, Docker Compose will automatically create them when starting services.
+- You can manually inspect or back up all data by accessing the corresponding local directories.
+
+### 8.3 Directory Permissions (Required for Prometheus)
+
+Before starting Docker Compose, set correct permissions for Prometheus data directory to allow container read/write access:
+
+```bash
+sudo chown -R 65534:65534 /home/ec2-user/mlops-serve/prometheus-data
+sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
+```
+
+- This ensures Prometheus can read and write its data files inside the container.
+
+> Note:
+> - No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
+> - Ensure the host user running Docker has read/write permissions on these directories.
+> - API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
+
+## 9. Testing
+
+- All basic and smoke tests are located in the `tests/` directory.
+  - Tests cover import checks, S3 mock upload/download, feature extraction with mocked issues, and model prediction logic.
+- Most tests use `pytest` and `moto` to mock S3 operations, ensuring no real AWS charges or side effects.
+
+### 9.1 How to run tests
+
+1. **Install test dependencies (if not already installed):**
+   ```bash
+   pip install -r requirements-dev.txt
+   # Or, at minimum:
+   pip install pytest moto
+   ```
+
+2. **Run all tests:**
+   ```bash
+   pytest tests/
+   ```
+
+3. **Expected:**
+   - All tests should pass (green).
+   - No actual S3/AWS resources are created or billed.
+
+> Note:
+> - The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
+> - You can add more tests under `tests/` as needed.
+
+## 10. FAQ
+
+**Q: My workflow.py did not run as scheduled. What should I check?**  
+- Verify that your cron job is properly set (`crontab -l`).  
+- Check if your cron time matches your EC2 timezone (use `date` to check system time).  
+- Adjust the schedule if needed and check for any typos or path errors in the cron command.
+
+**Q: I am getting S3 permission or access errors. What should I do?**  
+- Ensure your EC2 instance is attached to an IAM role with `AmazonS3FullAccess`.
+- Double-check that your `.env` file specifies the correct `MODEL_BUCKET` name.
+
+**Q: My GitHub Actions CD workflow failed and I cannot see details on the host. How can I debug this?**  
+- Go to the [AWS SSM Console](https://console.aws.amazon.com/systems-manager/run-command/) and check the "Run Command" history for your EC2 instance.
+- Use AWS Fleet Manager to inspect your instance, review command execution logs, and verify status.
+
+## 11. Maintainers & Contact
+
+- Maintainer: [Arsney091289421](https://github.com/Arsney091289421)
+- Email: leearseny3@gmail.com
+- Feedback and issues are welcome—please use [GitHub Issues](https://github.com/Arsney091289421/mlops-serve/issues)
 
 

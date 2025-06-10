@@ -8,6 +8,32 @@ This repository provides a batch inference and prediction service for GitHub ope
 
 All core features (model download, prediction, API serving, CSV export) are available both in the cloud and locally, as long as environment variables and AWS credentials are configured.
 
+## Table of Contents
+
+1. [Project Overview](#1-project-overview)
+2. [Features](#2-features)
+3. [Tech Stack](#3-tech-stack)
+4. [System Architecture](#4-system-architecture)
+5. [Quick Start](#5-quick-start)
+    - [Prerequisites](#51-prerequisites)
+    - [Deployment](#52-deployment)
+6. [Workflow & Automation](#6-workflow--automation)
+    - [Setting up a cron job](#61-example-setting-up-a-daily-cron-job)
+    - [Prometheus Metrics](#62-prometheus-metrics)
+    - [Why cron?](#63-why-cron)
+7. [API Usage](#7-api-usage)
+    - [Endpoints & Description](#71-endpoints--description)
+    - [Example: Export & Predict API](#72-example-export--predict-api)
+    - [Interactive API Docs](#73-interactive-api-docs-swagger-ui)
+8. [Docker/Compose Configuration](#8-dockercompose-configuration)
+    - [Services & Ports](#81-services--ports)
+    - [Volume Mounts & Data Persistence](#82-volume-mounts--data-persistence)
+    - [Directory Permissions](#83-directory-permissions-required-for-prometheus)
+9. [Testing](#9-testing)
+    - [How to run tests](#91-how-to-run-tests)
+10. [FAQ](#10-faq)
+11. [Maintainers & Contact](#11-maintainers--contact)
+
 ## 2. Features
 
 - Automated daily batch inference and prediction for GitHub open issues

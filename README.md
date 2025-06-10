@@ -224,11 +224,10 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 
 - This ensures Prometheus can read and write its data files inside the container.
 
-### 8.4 Notes
-
-- No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
-- Ensure the host user running Docker has read/write permissions on these directories.
-- API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
+> Note:
+> - No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
+> - Ensure the host user running Docker has read/write permissions on these directories.
+> - API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
 
 
 

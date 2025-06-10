@@ -151,15 +151,17 @@ By default, the API server runs in the Docker container on **port 8000**.
 
 All responses (except CSV download) are in JSON format.
 
-### 7.2 Example: Export Predictions for Recent 1 Day as CSV
+### 7.2 Export & Predict API Examples
+
+**1. Export Predictions for Recent 1 Day as CSV**
 
 ```bash
 curl -O -J "http://localhost:8000/export_predictions?days=1"
 ```
 
-> `-O -J` will save the CSV file with the filename provided by the server.
+---
 
-### 7.3 Example: Predict by Issue IDs
+**2. Predict by Issue IDs**
 
 ```bash
 curl -X POST "http://localhost:8000/predict_by_ids" \
@@ -167,7 +169,9 @@ curl -X POST "http://localhost:8000/predict_by_ids" \
   -d '{"ids": [12345, 12346, 12347]}'
 ```
 
-### 7.4 Example: Export Predictions by Issue IDs as CSV
+---
+
+**3. Export Predictions by Issue IDs as CSV**
 
 ```bash
 curl -X POST "http://localhost:8000/export_predictions_by_ids" \
@@ -176,7 +180,8 @@ curl -X POST "http://localhost:8000/export_predictions_by_ids" \
   -OJ
 ```
 
-### 7.5 Interactive API Docs (Swagger UI)
+
+### 7.3 Interactive API Docs (Swagger UI)
 
 You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
 
@@ -185,7 +190,7 @@ You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
 
 ## 8. Docker/Compose Configuration
 
-### Services & Ports
+### 8.1 Services & Ports
 
 | Service      | Description                  | Default Port |
 |--------------|-----------------------------|--------------|
@@ -194,7 +199,7 @@ You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
 | pushgateway  | Prometheus Pushgateway       | 9091         |
 | grafana      | Grafana dashboard            | 3000         |
 
-### Volume Mounts & Data Persistence
+### 8.2 Volume Mounts & Data Persistence
 
 | Service    | Local Path                  | Container Path / Notes           | Purpose                          |
 |------------|-----------------------------|----------------------------------|-----------------------------------|
@@ -208,7 +213,7 @@ You can browse and test all endpoints interactively via Swagger/OpenAPI UI:
 - If the output/model directories (`model/`, `predict_outputs/`) do not exist, Docker Compose will automatically create them when starting services.
 - You can manually inspect or back up all data by accessing the corresponding local directories.
 
-### Directory Permissions (Required for Prometheus)
+### 8.3 Directory Permissions (Required for Prometheus)
 
 Before starting Docker Compose, set correct permissions for Prometheus data directory to allow container read/write access:
 
@@ -219,7 +224,7 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 
 - This ensures Prometheus can read and write its data files inside the container.
 
-### Notes
+### 8.4 Notes
 
 - No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
 - Ensure the host user running Docker has read/write permissions on these directories.

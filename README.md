@@ -1,3 +1,29 @@
+## Table of Contents
+
+1. [Project Overview](#1-project-overview)
+2. [Features](#2-features)
+3. [Tech Stack](#3-tech-stack)
+4. [System Architecture](#4-system-architecture)
+5. [Quick Start](#5-quick-start)
+    - [Prerequisites](#51-prerequisites)
+    - [Deployment](#52-deployment)
+6. [Workflow & Automation](#6-workflow--automation)
+    - [Setting up a cron job](#61-example-setting-up-a-daily-cron-job)
+    - [Prometheus Metrics](#62-prometheus-metrics)
+    - [Why cron?](#63-why-cron)
+7. [API Usage](#7-api-usage)
+    - [Endpoints & Description](#71-endpoints--description)
+    - [Example: Export & Predict API](#72-example-export--predict-api)
+    - [Interactive API Docs](#73-interactive-api-docs-swagger-ui)
+8. [Docker/Compose Configuration](#8-dockercompose-configuration)
+    - [Services & Ports](#81-services--ports)
+    - [Volume Mounts & Data Persistence](#82-volume-mounts--data-persistence)
+    - [Directory Permissions](#83-directory-permissions-required-for-prometheus)
+9. [Testing](#9-testing)
+    - [How to run tests](#91-how-to-run-tests)
+10. [FAQ](#10-faq)
+11. [Maintainers & Contact](#11-maintainers--contact)
+
 ## 1. Project Overview
 
 This repository provides a batch inference and prediction service for GitHub open issues, optimized for daily automated runs on AWS EC2, but also runnable locally.
@@ -26,6 +52,8 @@ All core features (model download, prediction, API serving, CSV export) are avai
 - Docker & docker-compose
 - AWS S3 / EC2 / SSM / IAM
 - Prometheus, Pushgateway, Grafana
+- GitHub Actions (CI/CD)
+- pytest, moto 
 
 ## 4. System Architecture
 
@@ -52,9 +80,8 @@ All core features (model download, prediction, API serving, CSV export) are avai
   - `GITHUB_TOKEN`: Your GitHub Personal Access Token  
     - Only the `public_repo` scope is required (for reading public repositories and issues)
   - `MODEL_BUCKET`: Name of your S3 bucket for storing models and prediction outputs
-> Note:  
-> - You do **not** need to specify `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` when running on EC2 with the correct IAM role attached.
-> - The `MODEL_BUCKET` environment variable is still required, even when using IAM roles, to specify the target S3 bucket name.
+> **Note**:  You do **not** need to specify `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` when running on EC2 with the correct IAM role attached.
+> The `MODEL_BUCKET` environment variable is still required, even when using IAM roles, to specify the target S3 bucket name.
 
 ### 5.2 Deployment
 
@@ -233,10 +260,9 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 
 - This ensures Prometheus can read and write its data files inside the container.
 
-> Note:
-> - No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
-> - Ensure the host user running Docker has read/write permissions on these directories.
-> - API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
+> **Note**: No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
+> Ensure the host user running Docker has read/write permissions on these directories.
+> API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
 
 ## 9. Testing
 
@@ -262,9 +288,8 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
    - All tests should pass (green).
    - No actual S3/AWS resources are created or billed.
 
-> Note:
-> - The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
-> - You can add more tests under `tests/` as needed.
+> **Note**: The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
+> You can add more tests under `tests/` as needed.
 
 ## 10. FAQ
 

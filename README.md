@@ -1,13 +1,3 @@
-## 1. Project Overview
-
-This repository provides a batch inference and prediction service for GitHub open issues, optimized for daily automated runs on AWS EC2, but also runnable locally.
-
-> **Note:** This service is designed to work together with [MLOps-Sandbox-for-github-issues](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues),  
-> which handles issue collection, model training, and model upload to S3.  
-> This repo focuses on scheduled prediction, result export, and serving inference APIs.
-
-All core features (model download, prediction, API serving, CSV export) are available both in the cloud and locally, as long as environment variables and AWS credentials are configured.
-
 ## Table of Contents
 
 1. [Project Overview](#1-project-overview)
@@ -33,6 +23,16 @@ All core features (model download, prediction, API serving, CSV export) are avai
     - [How to run tests](#91-how-to-run-tests)
 10. [FAQ](#10-faq)
 11. [Maintainers & Contact](#11-maintainers--contact)
+
+## 1. Project Overview
+
+This repository provides a batch inference and prediction service for GitHub open issues, optimized for daily automated runs on AWS EC2, but also runnable locally.
+
+> **Note:** This service is designed to work together with [MLOps-Sandbox-for-github-issues](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues),  
+> which handles issue collection, model training, and model upload to S3.  
+> This repo focuses on scheduled prediction, result export, and serving inference APIs.
+
+All core features (model download, prediction, API serving, CSV export) are available both in the cloud and locally, as long as environment variables and AWS credentials are configured.
 
 ## 2. Features
 

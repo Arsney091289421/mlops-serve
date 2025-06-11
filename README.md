@@ -286,9 +286,8 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
    - All tests should pass (green).
    - No actual S3/AWS resources are created or billed.
 
-> Note:
-> - The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
-> - You can add more tests under `tests/` as needed.
+> **Note**: The test suite is designed to ensure critical components can be imported and run, and that S3/model logic works as expected, even without real AWS credentials.
+> You can add more tests under `tests/` as needed.
 
 ## 10. FAQ
 

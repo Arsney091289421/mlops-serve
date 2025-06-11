@@ -78,9 +78,8 @@ All core features (model download, prediction, API serving, CSV export) are avai
   - `GITHUB_TOKEN`: Your GitHub Personal Access Token  
     - Only the `public_repo` scope is required (for reading public repositories and issues)
   - `MODEL_BUCKET`: Name of your S3 bucket for storing models and prediction outputs
-> Note:  
-> - You do **not** need to specify `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` when running on EC2 with the correct IAM role attached.
-> - The `MODEL_BUCKET` environment variable is still required, even when using IAM roles, to specify the target S3 bucket name.
+> **Note**:  You do **not** need to specify `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` when running on EC2 with the correct IAM role attached.
+> The `MODEL_BUCKET` environment variable is still required, even when using IAM roles, to specify the target S3 bucket name.
 
 ### 5.2 Deployment
 
@@ -259,10 +258,9 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 
 - This ensures Prometheus can read and write its data files inside the container.
 
-> Note:
-> - No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
-> - Ensure the host user running Docker has read/write permissions on these directories.
-> - API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
+> **Note**: No need to manually mount extra volumes unless you want to store data elsewhere—by default, all important data is already persisted to the project directory.
+> Ensure the host user running Docker has read/write permissions on these directories.
+> API prediction/export endpoints will read and write from the same local directories, so both cron jobs and API share the latest data.
 
 ## 9. Testing
 

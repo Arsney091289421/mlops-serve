@@ -293,18 +293,15 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 
 ## 10. FAQ
 
-**Q: My workflow.py did not run as scheduled. What should I check?**  
-- Verify that your cron job is properly set (`crontab -l`).  
-- Check if your cron time matches your EC2 timezone (use `date` to check system time).  
-- Adjust the schedule if needed and check for any typos or path errors in the cron command.
+**Workflow didn’t run as scheduled?**  
+→ Check `crontab -l` to verify the schedule. Make sure your cron time matches the EC2 timezone (`date`), and confirm there are no typos or incorrect paths.
 
-**Q: I am getting S3 permission or access errors. What should I do?**  
-- Ensure your EC2 instance is attached to an IAM role with `AmazonS3FullAccess`.
-- Double-check that your `.env` file specifies the correct `MODEL_BUCKET` name.
+**S3 access denied or permission errors?**  
+→ Ensure your EC2 instance has an IAM role with `AmazonS3FullAccess`, and that your `.env` has the correct `MODEL_BUCKET`.
 
-**Q: My GitHub Actions CD workflow failed and I cannot see details on the host. How can I debug this?**  
-- Go to the [AWS SSM Console](https://console.aws.amazon.com/systems-manager/run-command/) and check the "Run Command" history for your EC2 instance.
-- Use AWS Fleet Manager to inspect your instance, review command execution logs, and verify status.
+**GitHub Actions CD failed, and nothing shows on the EC2 host?**  
+→ Visit the [AWS SSM Console](https://console.aws.amazon.com/systems-manager/run-command/) to view Run Command logs.  
+Use AWS Fleet Manager to inspect the instance and debug execution results.
 
 ## 11. Maintainers & Contact
 

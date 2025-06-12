@@ -93,14 +93,25 @@ All core features—model download, prediction, API serving, and CSV export—wo
    cd mlops-serve
    ```
 
-2. **Install Python dependencies**
+### 2. Install Python Dependencies
 
-   ```bash
-   pip install -r requirements.txt
-   pip install -e .
-   ```
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
 
- - The `-e .` flag uses `setup.py` for editable installation, enabling clean cross-file imports—no need to add manual sys.path hacks in scripts.
+* `requirements.txt` includes core dependencies needed to run the application.
+* The `-e .` flag installs the project in editable mode, allowing clean cross-module imports without modifying `sys.path`.
+
+#### (Optional) For Development and Testing
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+* Only needed for development and testing.
+* Includes tools like `pytest` and `moto[s3]` (for mocking AWS S3).
+* Not required in production, helping reduce unnecessary dependencies.
 
 3. **Configure environment variables**
 

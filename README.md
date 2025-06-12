@@ -93,40 +93,40 @@ All core features—model download, prediction, API serving, and CSV export—wo
    cd mlops-serve
    ```
 
-### 2. Install Python Dependencies
+2. **Install Python Dependencies**
 
-```bash
-pip install -r requirements.txt
-pip install -e .
-```
+   ```bash
+   pip install -r requirements.txt
+   pip install -e .
+   ```
 
-* `requirements.txt` includes core dependencies needed to run the application.
-* The `-e .` flag installs the project in editable mode, allowing clean cross-module imports without modifying `sys.path`.
+   * `requirements.txt` includes core dependencies needed to run the application.
+   * The `-e .` flag installs the project in editable mode, allowing clean cross-module imports without modifying `sys.path`.
 
-#### (Optional) For Development and Testing
+3. **(Optional) For Development and Testing**
 
-```bash
-pip install -r requirements-dev.txt
-```
+   ```bash
+   pip install -r requirements-dev.txt
+   ```
 
-* Only needed for development and testing.
-* Includes tools like `pytest` and `moto[s3]` (for mocking AWS S3).
-* Not required in production, helping reduce unnecessary dependencies.
+   * Only needed for development and testing.
+   * Includes tools like `pytest` and `moto[s3]` (for mocking AWS S3).
+   * Not required in production, helping reduce unnecessary dependencies.
 
-3. **Configure environment variables**
+4. **Configure environment variables**
 
    ```bash
    cp .env.example .env
    # Edit .env to match your S3 bucket, GitHub token, and output directory settings
    ```
 
-4. **Start all services with Docker Compose**
+5. **Start all services with Docker Compose**
 
    ```bash
    docker compose up --build -d
    ```
 
-5. **Check that services are running**
+6. **Check that services are running**
 
    - FastAPI docs: `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs`
    - Prometheus: `http://YOUR_EC2_IP_OR_LOCALHOST:9090/`

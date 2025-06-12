@@ -1,3 +1,42 @@
+# Issue-Copilot — Batch Inference & API Serve
+
+[![CI](https://github.com/Arsney091289421/mlops-serve/actions/workflows/ci.yml/badge.svg)](…)
+[![Deploy](https://github.com/Arsney091289421/mlops-serve/actions/workflows/cd.yml/badge.svg)](…)
+
+Predict whether a **new _transformers_ GitHub issue will close within 7 days**,  
+with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
+
+> **Training repo:** [`MLOps-Sandbox-for-github-issues`](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues)  
+> collects data, hyper-tunes XGBoost, uploads `latest_model.json` to **S3**.  
+> **This repo:** pulls the model, runs inference on open issues, exports CSV,  
+> and serves real-time predictions via **FastAPI**.
+
+---
+
+## Features
+
+| Category | What you get |
+|----------|--------------|
+| **Daily batch inference** | `cron` *(or Prefect)* job on EC2 |
+| **Model sync** | auto-download newest model from **S3** (+ history keep) |
+| **Real-time API** | `/predict` & `/export` endpoints (*FastAPI + Swagger*) |
+| **Observability** | Prometheus metrics to Grafana dashboard (P95, error-rate) |
+| **One-command deploy** | `docker compose up -d` ／ GitHub Actions - **SSM** Blue-Green |
+| **Tested** | `pytest` + **moto** S3 mocks in CI |
+
+---
+
+## Tech Stack
+`Python 3.9` · **FastAPI** · **XGBoost** · Docker / docker-compose  
+**AWS S3 · EC2 · SSM · IAM**  
+**Prometheus & Pushgateway • Grafana**  
+**GitHub Actions** (CI + CD) • `pytest` · `moto`
+
+---
+## System Architecture
+
+![System Architecture](docs/architecture.svg)
+
 ## Table of Contents
 
 1. [Project Overview](#1-project-overview)
@@ -23,41 +62,6 @@
     - [How to run tests](#91-how-to-run-tests)
 10. [FAQ](#10-faq)
 11. [Maintainers & Contact](#11-maintainers--contact)
-
-## 1. Project Overview
-
-This repository provides a batch inference and prediction service for GitHub open issues, optimized for daily automated runs on AWS EC2, but also runnable locally.
-
-> **Note:** This service is designed to work together with [MLOps-Sandbox-for-github-issues](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues),  
-> which handles issue collection, model training, and model upload to S3.  
-> This repo focuses on scheduled prediction, result export, and serving inference APIs.
-
-All core features (model download, prediction, API serving, CSV export) are available both in the cloud and locally, as long as environment variables and AWS credentials are configured.
-
-## 2. Features
-
-- Automated daily batch inference and prediction for GitHub open issues
-- Scheduled workflow via local cron job (or Prefect)
-- Model and result synchronization with S3
-- Real-time prediction and CSV export via RESTful API (FastAPI)
-- Built-in monitoring with Prometheus and Grafana
-- Easy deployment with Docker and docker-compose
-- Integrated CI/CD pipeline for EC2 auto-deployment
-
-## 3. Tech Stack
-
-- Python 3.9
-- FastAPI
-- XGBoost
-- Docker & docker-compose
-- AWS S3 / EC2 / SSM / IAM
-- Prometheus, Pushgateway, Grafana
-- GitHub Actions (CI/CD)
-- pytest, moto 
-
-## 4. System Architecture
-
-![System Architecture](docs/architecture.svg)
 
 ## 5. Quick Start
 
@@ -92,29 +96,40 @@ All core features (model download, prediction, API serving, CSV export) are avai
    cd mlops-serve
    ```
 
-2. **Install Python dependencies**
+2. **Install Python Dependencies**
 
    ```bash
    pip install -r requirements.txt
    pip install -e .
    ```
 
- - The `-e .` flag uses `setup.py` for editable installation, enabling clean cross-file imports—no need to add manual sys.path hacks in scripts.
+   * `requirements.txt` includes core dependencies needed to run the application.
+   * The `-e .` flag installs the project in editable mode, allowing clean cross-module imports without modifying `sys.path`.
 
-3. **Configure environment variables**
+3. **(Optional) For Development and Testing**
+
+   ```bash
+   pip install -r requirements-dev.txt
+   ```
+
+   * Only needed for development and testing.
+   * Includes tools like `pytest` and `moto[s3]` (for mocking AWS S3).
+   * Not required in production, helping reduce unnecessary dependencies.
+
+4. **Configure environment variables**
 
    ```bash
    cp .env.example .env
    # Edit .env to match your S3 bucket, GitHub token, and output directory settings
    ```
 
-4. **Start all services with Docker Compose**
+5. **Start all services with Docker Compose**
 
    ```bash
    docker compose up --build -d
    ```
 
-5. **Check that services are running**
+6. **Check that services are running**
 
    - FastAPI docs: `http://YOUR_EC2_IP_OR_LOCALHOST:8000/docs`
    - Prometheus: `http://YOUR_EC2_IP_OR_LOCALHOST:9090/`
@@ -293,18 +308,15 @@ sudo chmod -R 755 /home/ec2-user/mlops-serve/prometheus-data
 
 ## 10. FAQ
 
-**Q: My workflow.py did not run as scheduled. What should I check?**  
-- Verify that your cron job is properly set (`crontab -l`).  
-- Check if your cron time matches your EC2 timezone (use `date` to check system time).  
-- Adjust the schedule if needed and check for any typos or path errors in the cron command.
+**Workflow didn’t run as scheduled?**  
+→ Check `crontab -l` to verify the schedule. Make sure your cron time matches the EC2 timezone (`date`), and confirm there are no typos or incorrect paths.
 
-**Q: I am getting S3 permission or access errors. What should I do?**  
-- Ensure your EC2 instance is attached to an IAM role with `AmazonS3FullAccess`.
-- Double-check that your `.env` file specifies the correct `MODEL_BUCKET` name.
+**S3 access denied or permission errors?**  
+→ Ensure your EC2 instance has an IAM role with `AmazonS3FullAccess`, and that your `.env` has the correct `MODEL_BUCKET`.
 
-**Q: My GitHub Actions CD workflow failed and I cannot see details on the host. How can I debug this?**  
-- Go to the [AWS SSM Console](https://console.aws.amazon.com/systems-manager/run-command/) and check the "Run Command" history for your EC2 instance.
-- Use AWS Fleet Manager to inspect your instance, review command execution logs, and verify status.
+**GitHub Actions CD failed, and nothing shows on the EC2 host?**  
+→ Visit the [AWS SSM Console](https://console.aws.amazon.com/systems-manager/run-command/) to view Run Command logs.  
+Use AWS Fleet Manager to inspect the instance and debug execution results.
 
 ## 11. Maintainers & Contact
 

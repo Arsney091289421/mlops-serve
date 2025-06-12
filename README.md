@@ -52,6 +52,8 @@ All core features (model download, prediction, API serving, CSV export) are avai
 - Docker & docker-compose
 - AWS S3 / EC2 / SSM / IAM
 - Prometheus, Pushgateway, Grafana
+- GitHub Actions (CI/CD)
+- pytest, moto 
 
 ## 4. System Architecture
 

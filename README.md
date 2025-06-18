@@ -24,6 +24,16 @@ with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
 | **One-command deploy** | `docker compose up -d` ／ GitHub Actions - **SSM** Blue-Green |
 | **Tested** | `pytest` + **moto** S3 mocks in CI |
 
+### 📊 Monitoring (Prometheus ➜ Grafana)
+
+<img src="docs/grafana_workflow_thumb.png" width="600">
+
+<details><summary>click to view full dashboard</summary>
+
+![](docs/grafana_workflow_full.png)
+
+</details>
+
 ---
 
 ## Tech Stack

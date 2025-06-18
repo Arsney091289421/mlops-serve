@@ -1,3 +1,42 @@
+# Issue-Copilot — Batch Inference & API Serve
+
+[![CI](https://github.com/Arsney091289421/mlops-serve/actions/workflows/ci.yml/badge.svg)](…)
+[![Deploy](https://github.com/Arsney091289421/mlops-serve/actions/workflows/cd.yml/badge.svg)](…)
+
+Predict whether a **new _transformers_ GitHub issue will close within 7 days**,  
+with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
+
+> **Training repo:** [`MLOps-Sandbox-for-github-issues`](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues)  
+> collects data, hyper-tunes XGBoost, uploads `latest_model.json` to **S3**.  
+> **This repo:** pulls the model, runs inference on open issues, exports CSV,  
+> and serves real-time predictions via **FastAPI**.
+
+---
+
+## Features
+
+| Category | What you get |
+|----------|--------------|
+| **Daily batch inference** | `cron` *(or Prefect)* job on EC2 |
+| **Model sync** | auto-download newest model from **S3** (+ history keep) |
+| **Real-time API** | `/predict` & `/export` endpoints (*FastAPI + Swagger*) |
+| **Observability** | Prometheus metrics to Grafana dashboard (P95, error-rate) |
+| **One-command deploy** | `docker compose up -d` ／ GitHub Actions - **SSM** Blue-Green |
+| **Tested** | `pytest` + **moto** S3 mocks in CI |
+
+---
+
+## Tech Stack
+`Python 3.9` · **FastAPI** · **XGBoost** · Docker / docker-compose  
+**AWS S3 · EC2 · SSM · IAM**  
+**Prometheus & Pushgateway • Grafana**  
+**GitHub Actions** (CI + CD) • `pytest` · `moto`
+
+---
+## System Architecture
+
+![System Architecture](docs/architecture.svg)
+
 ## Table of Contents
 
 1. [Project Overview](#1-project-overview)
@@ -23,45 +62,6 @@
     - [How to run tests](#91-how-to-run-tests)
 10. [FAQ](#10-faq)
 11. [Maintainers & Contact](#11-maintainers--contact)
-
-[![CI](https://github.com/Arsney091289421/mlops-serve/actions/workflows/ci.yml/badge.svg)](…)
-[![Deploy](https://github.com/Arsney091289421/mlops-serve/actions/workflows/cd.yml/badge.svg)](…)
-
-## 1. Project Overview
-
-Predict whether a **new _transformers_ GitHub issue will close within 7 days**,  
-with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
-
-> **Training repo:** [`MLOps-Sandbox-for-github-issues`](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues)  
-> collects data, hyper-tunes XGBoost, uploads `latest_model.json` to **S3**.  
-> **This repo:** pulls the model, runs inference on open issues, exports CSV,  
-> and serves real-time predictions via **FastAPI**.
-
----
-
-## 2. Features
-
-| Category | What you get |
-|----------|--------------|
-| **Daily batch inference** | `cron` *(or Prefect)* job on EC2 |
-| **Model sync** | auto-download newest model from **S3** (+ history keep) |
-| **Real-time API** | `/predict` & `/export` endpoints (*FastAPI + Swagger*) |
-| **Observability** | Prometheus metrics to Grafana dashboard (P95, error-rate) |
-| **One-command deploy** | `docker compose up -d` ／ GitHub Actions - **SSM** Blue-Green |
-| **Tested** | `pytest` + **moto** S3 mocks in CI |
-
----
-
-## 3. Tech Stack
-`Python 3.9` · **FastAPI** · **XGBoost** · Docker / docker-compose  
-**AWS S3 · EC2 · SSM · IAM**  
-**Prometheus & Pushgateway • Grafana**  
-**GitHub Actions** (CI + CD) • `pytest` · `moto`
-
----
-## 4. System Architecture
-
-![System Architecture](docs/architecture.svg)
 
 ## 5. Quick Start
 

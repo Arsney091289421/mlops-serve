@@ -45,8 +45,10 @@ with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
 
 ![System Architecture](docs/architecture.svg)
 
+## Table of Contents
+
 <details>
-<summary><strong>Table of Contents</strong>click to expand</summary>
+<summary>Click to expand</summary>
 
 <br>
 

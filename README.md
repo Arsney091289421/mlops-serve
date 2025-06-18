@@ -21,10 +21,10 @@ with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
 | **Model sync** | auto-download newest model from **S3** (+ history keep) |
 | **Real-time API** | `/predict` & `/export` endpoints (*FastAPI + Swagger*) |
 | **Observability** | Prometheus metrics to Grafana dashboard (P95, error-rate) |
-| **One-command deploy** | `docker compose up -d` ／ GitHub Actions - **SSM** Blue-Green |
+| **One-command deploy** | `docker compose up -d` ／ GitHub Actions ➜ **SSM** Blue-Green |
 | **Tested** | `pytest` + **moto** S3 mocks in CI |
 
-### Monitoring (Prometheus ➜ Grafana)
+### Monitoring (Prometheus ➜ Grafana) 
 
 <details><summary>click to view full dashboard</summary>
 

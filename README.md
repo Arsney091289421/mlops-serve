@@ -45,31 +45,36 @@ with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
 
 ![System Architecture](docs/architecture.svg)
 
-## Table of Contents
+<details>
+<summary><strong>Table of Contents</strong>click to expand</summary>
 
-1. [Project Overview](#1-project-overview)
-2. [Features](#2-features)
-3. [Tech Stack](#3-tech-stack)
-4. [System Architecture](#4-system-architecture)
-5. [Quick Start](#5-quick-start)
-    - [Prerequisites](#51-prerequisites)
-    - [Deployment](#52-deployment)
-6. [Workflow & Automation](#6-workflow--automation)
-    - [Setting up a cron job](#61-example-setting-up-a-daily-cron-job)
-    - [Prometheus Metrics](#62-prometheus-metrics)
-    - [Why cron?](#63-why-cron)
-7. [API Usage](#7-api-usage)
-    - [Endpoints & Description](#71-endpoints--description)
-    - [Example: Export & Predict API](#72-example-export--predict-api)
-    - [Interactive API Docs](#73-interactive-api-docs-swagger-ui)
-8. [Docker/Compose Configuration](#8-dockercompose-configuration)
-    - [Services & Ports](#81-services--ports)
-    - [Volume Mounts & Data Persistence](#82-volume-mounts--data-persistence)
-    - [Directory Permissions](#83-directory-permissions-required-for-prometheus)
-9. [Testing](#9-testing)
-    - [How to run tests](#91-how-to-run-tests)
-10. [FAQ](#10-faq)
-11. [Maintainers & Contact](#11-maintainers--contact)
+<br>
+
+1. [Project Overview](#1-project-overview)  
+2. [Features](#2-features)  
+3. [Tech Stack](#3-tech-stack)  
+4. [System Architecture](#4-system-architecture)  
+5. [Quick Start](#5-quick-start)  
+    - [Prerequisites](#51-prerequisites)  
+    - [Deployment](#52-deployment)  
+6. [Workflow & Automation](#6-workflow--automation)  
+    - [Setting up a cron job](#61-example-setting-up-a-daily-cron-job)  
+    - [Prometheus Metrics](#62-prometheus-metrics)  
+    - [Why cron?](#63-why-cron)  
+7. [API Usage](#7-api-usage)  
+    - [Endpoints & Description](#71-endpoints--description)  
+    - [Example: Export & Predict API](#72-example-export--predict-api)  
+    - [Interactive API Docs](#73-interactive-api-docs-swagger-ui)  
+8. [Docker/Compose Configuration](#8-dockercompose-configuration)  
+    - [Services & Ports](#81-services--ports)  
+    - [Volume Mounts & Data Persistence](#82-volume-mounts--data-persistence)  
+    - [Directory Permissions](#83-directory-permissions-required-for-prometheus)  
+9. [Testing](#9-testing)  
+    - [How to run tests](#91-how-to-run-tests)  
+10. [FAQ](#10-faq)  
+11. [Maintainers & Contact](#11-maintainers--contact)  
+
+</details>
 
 ## 5. Quick Start
 

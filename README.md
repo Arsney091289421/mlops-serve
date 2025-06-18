@@ -24,38 +24,41 @@
 10. [FAQ](#10-faq)
 11. [Maintainers & Contact](#11-maintainers--contact)
 
-## 1. Project Overview
+[![CI](https://github.com/<user>/mlops-serve/actions/workflows/ci.yml/badge.svg)](…)
+[![Deploy](https://github.com/<user>/mlops-serve/actions/workflows/cd.yml/badge.svg)](…)
 
-This repository provides a batch inference and prediction service for GitHub open issues, optimized for daily automated runs on AWS EC2, but also runnable locally.
+# 1. Project Overview
 
-> **Note:** This service works together with [MLOps-Sandbox-for-github-issues](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues),  
-> which collects and trains models on issues from the [huggingface/transformers](https://github.com/huggingface/transformers) GitHub repo, and uploads them to S3.  
-> This repo handles scheduled inference, result export, and API serving.
+Predict whether a **new _transformers_ GitHub issue will close within 7 days**,  
+with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
 
-All core features—model download, prediction, API serving, and CSV export—work both in the cloud and locally, given proper environment configuration.
+> **Training repo:** [`MLOps-Sandbox-for-github-issues`](https://github.com/Arsney091289421/MLOps-Sandbox-for-github-issues)  
+> collects data, hyper-tunes XGBoost, uploads `latest_model.json` ➜ **S3**.  
+> **This repo:** pulls the model, runs inference on open issues, exports CSV,  
+> and serves real-time predictions via **FastAPI**.
+
+---
 
 ## 2. Features
 
-- Automated daily batch inference for GitHub open issues
-- Scheduled execution via cron or Prefect
-- Model syncing and result upload to S3
-- Real-time prediction & CSV export via FastAPI
-- Monitoring with Prometheus + Grafana
-- Dockerized deployment with docker-compose
-- CI/CD pipeline for auto-deployment to EC2
+| Category | What you get |
+|----------|--------------|
+| **Daily batch inference** | `cron` *(or Prefect)* job on EC2 |
+| **Model sync** | auto-download newest model from **S3** (+ history keep) |
+| **Real-time API** | `/predict` & `/export` endpoints (*FastAPI + Swagger*) |
+| **Observability** | Prometheus metrics → Grafana dashboard (P95, error-rate) |
+| **One-command deploy** | `docker compose up -d` ／ GitHub Actions → **SSM** Blue-Green |
+| **Tested** | `pytest` + **moto** S3 mocks in CI |
 
+---
 
 ## 3. Tech Stack
+`Python 3.9` · **FastAPI** · **XGBoost** · Docker / docker-compose  
+**AWS S3 · EC2 · SSM · IAM**  
+**Prometheus & Pushgateway • Grafana**  
+**GitHub Actions** (CI + CD) • `pytest` · `moto`
 
-- Python 3.9
-- FastAPI
-- XGBoost
-- Docker & docker-compose
-- AWS S3 / EC2 / SSM / IAM
-- Prometheus, Pushgateway, Grafana
-- GitHub Actions (CI/CD)
-- pytest, moto 
-
+---
 ## 4. System Architecture
 
 ![System Architecture](docs/architecture.svg)

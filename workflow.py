@@ -30,5 +30,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[FATAL ERROR] {e}")
         push_workflow_status("predict_upload", 0)   # fail
-        exit(1)
+        exit(1)  
 

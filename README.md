@@ -1,7 +1,7 @@
 # Issue-Copilot — Batch Inference & API Serve
 
-[![CI](https://github.com/Arsney091289421/mlops-serve/actions/workflows/ci.yml/badge.svg)](…)
-[![Deploy](https://github.com/Arsney091289421/mlops-serve/actions/workflows/cd.yml/badge.svg)](…)
+[![CI](https://github.com/Arsney091289421/mlops-serve/actions/workflows/ci.yml/badge.svg)](https://github.com/Arsney091289421/mlops-serve/actions/workflows/ci.yml)
+[![Deploy](https://github.com/Arsney091289421/mlops-serve/actions/workflows/cd.yml/badge.svg)](https://github.com/Arsney091289421/mlops-serve/actions/workflows/cd.yml)
 
 Predict whether a **new _transformers_ GitHub issue will close within 7 days**,  
 with a fully-automated batch pipeline (EC2/cron) **or** one-shot local run.
